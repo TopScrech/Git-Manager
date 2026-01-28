@@ -59,16 +59,25 @@ struct ContentView: View {
             }
             .buttonStyle(.plain)
 
-            Button {
-                store.refresh()
-            } label: {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(.callout, design: .rounded).weight(.semibold))
+            if store.isScanning {
+                ProgressView()
+                    .controlSize(.small)
                     .padding(8)
                     .background(.thinMaterial, in: .circle)
+                    .frame(width: 32, height: 32)
+            } else {
+                Button {
+                    store.refresh()
+                } label: {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(.callout, design: .rounded).weight(.semibold))
+                        .padding(8)
+                        .background(.thinMaterial, in: .circle)
+                        .frame(width: 32, height: 32)
+                }
+                .buttonStyle(.plain)
+                .disabled(store.selectedFolder == nil)
             }
-            .buttonStyle(.plain)
-            .disabled(store.selectedFolder == nil || store.isScanning)
 
             Spacer()
 
@@ -83,8 +92,7 @@ struct ContentView: View {
     private var sidebarContent: some View {
         VStack(alignment: .leading, spacing: 14) {
             HeaderView(
-                selectedPath: store.selectedFolder?.path,
-                isScanning: store.isScanning
+                selectedPath: store.selectedFolder?.path
             )
 
             controlRow
