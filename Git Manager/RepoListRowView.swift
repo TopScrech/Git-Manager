@@ -1,14 +1,14 @@
 import SwiftUI
 
-struct RepoRowView: View {
+struct RepoListRowView: View {
     let repository: GitRepository
     let isFavorite: Bool
     let onToggleFavorite: () -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(alignment: .top, spacing: 12) {
-                VStack(alignment: .leading, spacing: 4) {
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(alignment: .top, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(repository.name)
                         .font(.system(.headline, design: .serif))
                         .foregroundStyle(.primary)
@@ -32,31 +32,17 @@ struct RepoRowView: View {
                 .help(isFavorite ? "Unfavorite" : "Favorite")
             }
 
-            statusRow
-
             if let errorMessage = repository.errorMessage {
                 Text(errorMessage)
                     .font(.system(.caption, design: .rounded))
                     .foregroundStyle(AppTheme.warning)
-            } else if repository.commits.isEmpty {
-                Text(emptyMessage)
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
             } else {
-                LazyVStack(alignment: .leading, spacing: 6) {
-                    ForEach(repository.commits) { commit in
-                        CommitRowView(commit: commit)
-                    }
-                }
-                .padding(.top, 2)
+                statusRow
             }
         }
-        .padding(14)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(.white.opacity(0.25), lineWidth: 0.8)
-        )
+        .padding(.vertical, 6)
+        .contentShape(Rectangle())
     }
 
     private var statusRow: some View {
@@ -96,15 +82,5 @@ struct RepoRowView: View {
         }
         .font(.system(.caption, design: .rounded))
         .foregroundStyle(.secondary)
-    }
-
-    private var emptyMessage: String {
-        if repository.baseRef == nil {
-            return "main or master not found"
-        }
-        if let comparisonBranch = repository.comparisonBranch {
-            return "No new commits on \(comparisonBranch) compared with \(repository.baseRef ?? "base")"
-        }
-        return "No new commits compared with \(repository.baseRef ?? "base")"
     }
 }
