@@ -1,4 +1,4 @@
-import SwiftUI
+import ScrechKit
 
 struct RepoDetailEmptyView: View {
     let hasRepositories: Bool
@@ -7,15 +7,15 @@ struct RepoDetailEmptyView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: iconName)
-                .font(.system(size: 28, weight: .semibold))
+                .title(.semibold)
                 .foregroundStyle(.secondary)
 
             Text(title)
-                .font(.system(.headline, design: .serif))
+                .headline(design: .serif)
                 .foregroundStyle(.primary)
 
             Text(subtitle)
-                .font(.system(.caption, design: .rounded))
+                .caption(design: .rounded)
                 .foregroundStyle(.secondary)
         }
         .padding(22)

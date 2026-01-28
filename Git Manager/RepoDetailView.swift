@@ -1,9 +1,10 @@
-import SwiftUI
+import ScrechKit
 
 struct RepoDetailView: View {
     let repository: GitRepository
     let isFavorite: Bool
     let onToggleFavorite: () -> Void
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
         ScrollView {
@@ -28,43 +29,64 @@ struct RepoDetailView: View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 4) {
                 Text(repository.name)
-                    .font(.system(.title3, design: .serif).weight(.semibold))
-                    .foregroundStyle(.primary)
+                    .title3(.semibold, design: .serif)
 
                 Text(repository.path)
-                    .font(.system(.caption, design: .monospaced))
-                    .foregroundStyle(.secondary)
+                    .caption(design: .monospaced)
+                    .secondary()
                     .lineLimit(1)
                     .truncationMode(.middle)
             }
 
             Spacer(minLength: 0)
 
-            Button(action: onToggleFavorite) {
-                Image(systemName: isFavorite ? "star.fill" : "star")
-                    .foregroundStyle(isFavorite ? AppTheme.star : .secondary)
-                    .padding(6)
-                    .background(.thinMaterial, in: .circle)
+            HStack(spacing: 8) {
+                prButton
+                favoriteButton
             }
-            .buttonStyle(.plain)
-            .help(isFavorite ? "Unfavorite" : "Favorite")
         }
+    }
+
+    private var prButton: some View {
+        Button {
+            guard let prURL else { return }
+            openURL(prURL)
+        } label: {
+            Label("Create PR", systemImage: "arrow.up.right.square")
+                .caption(.semibold, design: .rounded)
+                .padding(.vertical, 6)
+                .padding(.horizontal, 10)
+                .background(.thinMaterial, in: .capsule)
+        }
+        .buttonStyle(.plain)
+        .disabled(prURL == nil)
+        .help(prButtonHelp)
+    }
+
+    private var favoriteButton: some View {
+        Button(action: onToggleFavorite) {
+            Image(systemName: isFavorite ? "star.fill" : "star")
+                .foregroundStyle(isFavorite ? AppTheme.star : .secondary)
+                .padding(6)
+                .background(.thinMaterial, in: .circle)
+        }
+        .buttonStyle(.plain)
+        .help(isFavorite ? "Unfavorite" : "Favorite")
     }
 
     private var detailSection: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Commits")
-                .font(.system(.headline, design: .rounded))
-                .foregroundStyle(.primary)
+                .headline(design: .rounded)
 
             if let errorMessage = repository.errorMessage {
                 Text(errorMessage)
-                    .font(.system(.caption, design: .rounded))
+                    .caption(design: .rounded)
                     .foregroundStyle(AppTheme.warning)
             } else if repository.commits.isEmpty {
                 Text(emptyMessage)
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .caption(design: .rounded)
+                    .secondary()
             } else {
                 LazyVStack(alignment: .leading, spacing: 8) {
                     ForEach(repository.commits) { commit in
@@ -110,8 +132,8 @@ struct RepoDetailView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .font(.system(.caption, design: .rounded))
-        .foregroundStyle(.secondary)
+        .caption(design: .rounded)
+        .secondary()
     }
 
     private var emptyMessage: String {
@@ -122,5 +144,33 @@ struct RepoDetailView: View {
             return "No new commits on \(comparisonBranch) compared with \(repository.baseRef ?? "base")"
         }
         return "No new commits compared with \(repository.baseRef ?? "base")"
+    }
+
+    private var prURL: URL? {
+        guard let baseRef = repository.baseRef else { return nil }
+        guard let compareBranch = repository.comparisonBranch ?? repository.currentBranch else { return nil }
+        guard compareBranch != baseRef else { return nil }
+        guard let remoteURL = repository.remoteURL else { return nil }
+        return GitRemoteURLBuilder.pullRequestURL(
+            remote: remoteURL,
+            base: baseRef,
+            head: compareBranch
+        )
+    }
+
+    private var prButtonHelp: String {
+        if repository.baseRef == nil {
+            return "main or master not found"
+        }
+        if repository.comparisonBranch == nil && repository.currentBranch == nil {
+            return "No branch to compare"
+        }
+        if repository.remoteURL == nil {
+            return "No remote found"
+        }
+        if prURL == nil {
+            return "PR URL unavailable"
+        }
+        return "Create pull request"
     }
 }

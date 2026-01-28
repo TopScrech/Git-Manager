@@ -4,6 +4,7 @@ struct GitRepository: Identifiable, Hashable {
     let id: String
     let name: String
     let path: String
+    let remoteURL: String?
     let currentBranch: String?
     let comparisonBranch: String?
     let baseRef: String?

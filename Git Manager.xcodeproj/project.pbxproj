@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F3AF1F182F2AD84C00C90958 /* ScrechKit in Frameworks */ = {isa = PBXBuildFile; productRef = F3AF1F172F2AD84C00C90958 /* ScrechKit */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		F3EBA0022F29FF7100AF831A /* Git Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Git Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AF1F182F2AD84C00C90958 /* ScrechKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = "Git Manager";
 			packageProductDependencies = (
+				F3AF1F172F2AD84C00C90958 /* ScrechKit */,
 			);
 			productName = "Git Manager";
 			productReference = F3EBA0022F29FF7100AF831A /* Git Manager.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = F3EB9FF92F29FF7100AF831A;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F3AF1F162F2AD84C00C90958 /* XCRemoteSwiftPackageReference "ScrechKit" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F3EBA0032F29FF7100AF831A /* Products */;
 			projectDirPath = "";
@@ -335,6 +344,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F3AF1F162F2AD84C00C90958 /* XCRemoteSwiftPackageReference "ScrechKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TopScrech/ScrechKit";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F3AF1F172F2AD84C00C90958 /* ScrechKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3AF1F162F2AD84C00C90958 /* XCRemoteSwiftPackageReference "ScrechKit" */;
+			productName = ScrechKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F3EB9FFA2F29FF7100AF831A /* Project object */;
 }

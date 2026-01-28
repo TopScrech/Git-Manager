@@ -1,4 +1,4 @@
-import SwiftUI
+import ScrechKit
 
 struct BackgroundView: View {
     @Environment(\.colorScheme) private var colorScheme
@@ -11,7 +11,7 @@ struct BackgroundView: View {
 
                 Circle()
                     .fill(AppTheme.accent.opacity(colorScheme == .dark ? 0.2 : 0.12))
-                    .frame(width: size.width * 0.55, height: size.width * 0.55)
+                    .frame(size.width * 0.55)
                     .blur(radius: 60)
                     .offset(x: -size.width * 0.25, y: -size.height * 0.35)
 

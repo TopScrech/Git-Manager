@@ -1,4 +1,4 @@
-import SwiftUI
+import ScrechKit
 
 struct RepoListRowView: View {
     let repository: GitRepository
@@ -10,11 +10,11 @@ struct RepoListRowView: View {
             HStack(alignment: .top, spacing: 10) {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(repository.name)
-                        .font(.system(.headline, design: .serif))
+                        .headline(design: .serif)
                         .foregroundStyle(.primary)
 
                     Text(repository.path)
-                        .font(.system(.caption, design: .monospaced))
+                        .caption(design: .monospaced)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
                         .truncationMode(.middle)
@@ -34,7 +34,7 @@ struct RepoListRowView: View {
 
             if let errorMessage = repository.errorMessage {
                 Text(errorMessage)
-                    .font(.system(.caption, design: .rounded))
+                    .caption(design: .rounded)
                     .foregroundStyle(AppTheme.warning)
                     .lineLimit(1)
             } else {
@@ -80,7 +80,7 @@ struct RepoListRowView: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .font(.system(.caption, design: .rounded))
+        .caption(design: .rounded)
         .foregroundStyle(.secondary)
     }
 }

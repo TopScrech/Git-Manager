@@ -1,4 +1,4 @@
-import SwiftUI
+import ScrechKit
 
 struct HeaderView: View {
     let selectedPath: String?
@@ -6,11 +6,11 @@ struct HeaderView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text("Git Manager")
-                .font(.system(.title2, design: .serif).weight(.semibold))
+                .title2(.semibold, design: .serif)
                 .foregroundStyle(.primary)
 
             Text(selectedPath ?? "Pick a root folder to scan for repositories")
-                .font(.system(.callout, design: .rounded))
+                .callout(design: .rounded)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
         }

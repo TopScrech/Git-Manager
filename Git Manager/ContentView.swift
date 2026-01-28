@@ -1,8 +1,9 @@
-import SwiftUI
+import ScrechKit
 
 struct ContentView: View {
     @StateObject private var store = RepoStore()
     @AppStorage("favoriteRepoPaths") private var favoriteRepoPaths = ""
+    
     @State private var isAppeared = false
     @State private var selectedRepoID: GitRepository.ID?
 
@@ -51,7 +52,7 @@ struct ContentView: View {
                     Image(systemName: "folder")
                     Text("Choose Folder")
                 }
-                .font(.system(.callout, design: .rounded).weight(.semibold))
+                .callout(.semibold, design: .rounded)
                 .padding(.vertical, 6)
                 .padding(.horizontal, 12)
                 .background(AppTheme.accent, in: .capsule)
@@ -64,16 +65,16 @@ struct ContentView: View {
                     .controlSize(.small)
                     .padding(8)
                     .background(.thinMaterial, in: .circle)
-                    .frame(width: 32, height: 32)
+                    .frame(32)
             } else {
                 Button {
                     store.refresh()
                 } label: {
                     Image(systemName: "arrow.clockwise")
-                        .font(.system(.callout, design: .rounded).weight(.semibold))
+                        .callout(.semibold, design: .rounded)
                         .padding(8)
                         .background(.thinMaterial, in: .circle)
-                        .frame(width: 32, height: 32)
+                        .frame(32)
                 }
                 .buttonStyle(.plain)
                 .disabled(store.selectedFolder == nil)
@@ -83,8 +84,8 @@ struct ContentView: View {
 
             if store.selectedFolder != nil {
                 Text("\(store.repositories.count) repos")
-                    .font(.system(.caption, design: .rounded))
-                    .foregroundStyle(.secondary)
+                    .caption(design: .rounded)
+                    .secondary()
             }
         }
     }

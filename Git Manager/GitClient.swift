@@ -52,6 +52,26 @@ struct GitClient {
         return output.split(separator: "\n").map(String.init)
     }
 
+    static func preferredRemoteURL(at path: String) async -> String? {
+        if let origin = try? await run(["remote", "get-url", "origin"], at: path), !origin.isEmpty {
+            return origin
+        }
+
+        guard let remotes = try? await run(["remote"], at: path), !remotes.isEmpty else {
+            return nil
+        }
+
+        guard let first = remotes.split(separator: "\n").map(String.init).first else {
+            return nil
+        }
+
+        if let url = try? await run(["remote", "get-url", first], at: path), !url.isEmpty {
+            return url
+        }
+
+        return nil
+    }
+
     static func baseRef(at path: String) async throws -> String? {
         let locals = try await localBranches(at: path)
         if locals.contains("main") { return "main" }

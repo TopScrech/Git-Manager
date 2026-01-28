@@ -1,4 +1,4 @@
-import SwiftUI
+import ScrechKit
 
 struct EmptyStateView: View {
     let hasFolder: Bool
@@ -6,15 +6,15 @@ struct EmptyStateView: View {
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: hasFolder ? "tray" : "folder")
-                .font(.system(size: 28, weight: .semibold))
+                .title(.semibold)
                 .foregroundStyle(.secondary)
 
             Text(hasFolder ? "No repositories found" : "Choose a folder to start")
-                .font(.system(.headline, design: .serif))
+                .headline(design: .serif)
                 .foregroundStyle(.primary)
 
             Text(hasFolder ? "Try a broader folder or add repos" : "We will scan that folder and stop at repo roots")
-                .font(.system(.caption, design: .rounded))
+                .caption(design: .rounded)
                 .foregroundStyle(.secondary)
         }
         .padding(20)
