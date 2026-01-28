@@ -29,7 +29,11 @@ struct GitClient {
     static func currentBranch(at path: String) async throws -> String? {
         do {
             let output = try await run(["rev-parse", "--abbrev-ref", "HEAD"], at: path)
-            return output.isEmpty ? nil : output
+            if output.isEmpty { return nil }
+            if output == "HEAD" {
+                return headBranchFallback(at: path)
+            }
+            return output
         } catch {
             if let fallback = headBranchFallback(at: path) {
                 return fallback
@@ -49,29 +53,33 @@ struct GitClient {
     }
 
     static func baseRef(at path: String) async throws -> String? {
-        if let upstream = try? await upstreamBranch(at: path) {
-            return upstream
-        }
-
         let locals = try await localBranches(at: path)
         if locals.contains("main") { return "main" }
         if locals.contains("master") { return "master" }
-
-        if let remoteHead = try? await remoteHeadRef(at: path) {
-            return remoteHead
-        }
-
-        let remotes = try await remoteBranches(at: path)
-        if remotes.contains("origin/main") { return "origin/main" }
-        if remotes.contains("origin/master") { return "origin/master" }
         return nil
     }
 
-    static func commits(aheadOf baseRef: String, at path: String) async throws -> [GitCommit] {
+    static func latestNonPrimaryBranch(
+        at path: String,
+        baseRef: String?,
+        currentBranch: String?
+    ) async throws -> String? {
+        var excluded: Set<String> = ["main", "master"]
+        if let baseRef { excluded.insert(baseRef) }
+        if let local = try await latestBranch(in: "refs/heads", excluding: excluded, at: path) {
+            return local
+        }
+        if let currentBranch, !excluded.contains(currentBranch) {
+            return currentBranch
+        }
+        return nil
+    }
+
+    static func commits(aheadOf baseRef: String, compareRef: String, at path: String) async throws -> [GitCommit] {
         let recordSeparator = "\u{001e}"
         let fieldSeparator = "\u{001f}"
         let format = "%H\(fieldSeparator)%h\(fieldSeparator)%s\(fieldSeparator)%ct\(recordSeparator)"
-        let output = try await run(["log", "--pretty=format:\(format)", "\(baseRef)..HEAD"], at: path)
+        let output = try await run(["log", "--pretty=format:\(format)", "\(baseRef)..\(compareRef)"], at: path)
         if output.isEmpty { return [] }
 
         return output
@@ -128,22 +136,6 @@ struct GitClient {
         return environment
     }
 
-    private static func upstreamBranch(at path: String) async throws -> String? {
-        let output = try await run(
-            ["rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{u}"],
-            at: path
-        )
-        return output.isEmpty ? nil : output
-    }
-
-    private static func remoteHeadRef(at path: String) async throws -> String? {
-        let output = try await run(
-            ["symbolic-ref", "--short", "refs/remotes/origin/HEAD"],
-            at: path
-        )
-        return output.isEmpty ? nil : output
-    }
-
     private static func headBranchFallback(at path: String) -> String? {
         guard let gitDir = gitDirectory(at: path) else { return nil }
         let headURL = gitDir.appendingPathComponent("HEAD")
@@ -152,6 +144,24 @@ struct GitClient {
         guard trimmed.hasPrefix("ref:") else { return nil }
         let ref = trimmed.replacingOccurrences(of: "ref:", with: "").trimmingCharacters(in: .whitespaces)
         return ref.split(separator: "/").last.map(String.init)
+    }
+
+    private static func latestBranch(
+        in reference: String,
+        excluding excluded: Set<String>,
+        at path: String
+    ) async throws -> String? {
+        let output = try await run(
+            ["for-each-ref", reference, "--sort=-committerdate", "--format=%(refname:short)"],
+            at: path
+        )
+        for line in output.split(separator: "\n") {
+            let name = String(line)
+            if !excluded.contains(name) {
+                return name
+            }
+        }
+        return nil
     }
 
     private static func gitDirectory(at path: String) -> URL? {

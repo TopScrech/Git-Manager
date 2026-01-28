@@ -61,7 +61,14 @@ struct RepoRowView: View {
 
     private var statusRow: some View {
         HStack(spacing: 10) {
-            if let branch = repository.currentBranch {
+            if let comparisonBranch = repository.comparisonBranch {
+                Label("Latest \(comparisonBranch)", systemImage: "clock")
+                    .labelStyle(.titleAndIcon)
+                if let branch = repository.currentBranch, branch != comparisonBranch {
+                    Label("Checked out \(branch)", systemImage: "point.topleft.down.curvedto.point.bottomright.up")
+                        .labelStyle(.titleAndIcon)
+                }
+            } else if let branch = repository.currentBranch {
                 Label(branch, systemImage: "point.topleft.down.curvedto.point.bottomright.up")
                     .labelStyle(.titleAndIcon)
             } else {
@@ -94,6 +101,9 @@ struct RepoRowView: View {
     private var emptyMessage: String {
         if repository.baseRef == nil {
             return "main or master not found"
+        }
+        if let comparisonBranch = repository.comparisonBranch {
+            return "No new commits on \(comparisonBranch) compared with \(repository.baseRef ?? "base")"
         }
         return "No new commits compared with \(repository.baseRef ?? "base")"
     }
