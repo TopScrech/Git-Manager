@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Git Manager
-//
-//  Created by Sergei Saliukov on 28.01.2026.
-//
-
 import SwiftUI
 
 struct ContentView: View {
