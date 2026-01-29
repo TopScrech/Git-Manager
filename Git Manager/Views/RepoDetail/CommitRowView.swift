@@ -2,7 +2,7 @@ import ScrechKit
 
 struct CommitRowView: View {
     let commit: GitCommit
-    let issueURL: URL?
+    let issueLinks: [CommitIssueLink]
     @Environment(\.openURL) private var openURL
 
     var body: some View {
@@ -20,9 +20,7 @@ struct CommitRowView: View {
                     Spacer(minLength: 8)
 
                     HStack(alignment: .firstTextBaseline, spacing: 8) {
-                        if let issueNumber = commit.issueNumber {
-                            issueBadge(issueNumber)
-                        }
+                        issueBadges()
 
                         Text(commit.displayTimeText)
                             .caption(design: .rounded)
@@ -34,16 +32,27 @@ struct CommitRowView: View {
     }
 
     @ViewBuilder
-    private func issueBadge(_ issueNumber: String) -> some View {
-        if let issueURL {
+    private func issueBadges() -> some View {
+        if !issueLinks.isEmpty {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                ForEach(issueLinks.indices, id: \.self) { index in
+                    issueBadge(issueLinks[index])
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func issueBadge(_ issueLink: CommitIssueLink) -> some View {
+        if let issueURL = issueLink.url {
             Button {
                 openURL(issueURL)
             } label: {
-                issueBadgeText(issueNumber)
+                issueBadgeText(issueLink.number)
             }
             .buttonStyle(.plain)
         } else {
-            issueBadgeText(issueNumber)
+            issueBadgeText(issueLink.number)
         }
     }
 
@@ -56,4 +65,9 @@ struct CommitRowView: View {
             .padding(.horizontal, 6)
             .background(AppTheme.accentSoft, in: .capsule)
     }
+}
+
+struct CommitIssueLink: Hashable {
+    let number: String
+    let url: URL?
 }

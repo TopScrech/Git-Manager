@@ -7,11 +7,10 @@ struct GitCommit: Identifiable, Hashable {
     let date: Date
 
     var id: String { fullHash }
-    var issueNumber: String? {
-        guard let match = subject.firstMatch(of: Self.issueRegex) else { return nil }
-        return String(match.output)
+    var issueNumbers: [String] {
+        subject.matches(of: Self.issueRegex).map { String($0.output) }
     }
-    var hasIssueNumber: Bool { issueNumber != nil }
+    var hasIssueNumbers: Bool { !issueNumbers.isEmpty }
 
     var displayTimeText: String {
         let calendar = Calendar.current

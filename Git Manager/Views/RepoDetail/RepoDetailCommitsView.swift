@@ -29,7 +29,7 @@ struct RepoDetailCommitsView: View {
                                 ForEach(group.commits) { commit in
                                     CommitRowView(
                                         commit: commit,
-                                        issueURL: issueURL(for: commit)
+                                        issueLinks: issueLinks(for: commit)
                                     )
                                 }
                             }
@@ -57,10 +57,18 @@ struct RepoDetailCommitsView: View {
             }
     }
 
-    private func issueURL(for commit: GitCommit) -> URL? {
-        guard let issueNumber = commit.issueNumber else { return nil }
-        guard let remoteURL = repository.remoteURL else { return nil }
-        return GitRemoteURLBuilder.issueURL(remote: remoteURL, issueNumber: issueNumber)
+    private func issueLinks(for commit: GitCommit) -> [CommitIssueLink] {
+        let issueNumbers = commit.issueNumbers
+        guard !issueNumbers.isEmpty else { return [] }
+        guard let remoteURL = repository.remoteURL else {
+            return issueNumbers.map { CommitIssueLink(number: $0, url: nil) }
+        }
+        return issueNumbers.map { issueNumber in
+            CommitIssueLink(
+                number: issueNumber,
+                url: GitRemoteURLBuilder.issueURL(remote: remoteURL, issueNumber: issueNumber)
+            )
+        }
     }
 
     private func dayTitle(for date: Date) -> String {
