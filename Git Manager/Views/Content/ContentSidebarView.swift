@@ -8,7 +8,8 @@ struct ContentSidebarView: View {
     let displayedRepositories: [GitRepository]
     let repoCountLabel: String
     let onToggleFavorite: (String) -> Void
-    
+    private let sidebarPadding: CGFloat = 20
+
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             HeaderView(selectedPath: store.selectedFolder?.path)
@@ -26,14 +27,16 @@ struct ContentSidebarView: View {
                             onToggleFavorite: { onToggleFavorite(repo.path) }
                         )
                         .tag(repo.id)
+                        .listRowInsets(EdgeInsets())
                     }
                 }
-                .listStyle(.inset)
+                .listStyle(.plain)
+                .padding(.horizontal, -sidebarPadding)
                 .scrollContentBackground(.hidden)
                 .searchable(text: $searchQuery, placement: .sidebar, prompt: "Search repositories")
             }
         }
-        .padding(20)
+        .padding(sidebarPadding)
         .frame(minWidth: 300, idealWidth: 360, maxWidth: 420, maxHeight: .infinity, alignment: .topLeading)
     }
 }
