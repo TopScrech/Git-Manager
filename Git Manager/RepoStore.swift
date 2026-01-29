@@ -5,6 +5,7 @@ import SwiftUI
 final class RepoStore: ObservableObject {
     private let selectedFolderKey = "selectedFolderPath"
     private let selectedFolderBookmarkKey = "selectedFolderBookmark"
+    private let cachedRepositoriesKey = "cachedRepositories"
     private var securityScopedFolder: URL?
 
     @Published private(set) var repositories: [GitRepository] = []
@@ -26,6 +27,7 @@ final class RepoStore: ObservableObject {
                 repositories = repos
                 isScanning = false
             }
+            persistCachedRepositories(repos, for: folder)
         }
     }
 
@@ -39,6 +41,7 @@ final class RepoStore: ObservableObject {
 
         guard let folder else {
             selectedFolder = nil
+            repositories = []
             persistSelectedFolder(nil)
             return
         }
@@ -46,6 +49,7 @@ final class RepoStore: ObservableObject {
         _ = folder.startAccessingSecurityScopedResource()
         securityScopedFolder = folder
         selectedFolder = folder
+        repositories = cachedRepositories(for: folder)
         persistSelectedFolder(folder)
     }
 
@@ -61,6 +65,7 @@ final class RepoStore: ObservableObject {
                 _ = url.startAccessingSecurityScopedResource()
                 securityScopedFolder = url
                 selectedFolder = url
+                repositories = cachedRepositories(for: url)
                 if isStale {
                     persistSelectedFolder(url)
                 }
@@ -75,6 +80,7 @@ final class RepoStore: ObservableObject {
             let url = URL(fileURLWithPath: path)
             if FileManager.default.fileExists(atPath: url.path) {
                 selectedFolder = url
+                repositories = cachedRepositories(for: url)
                 scan(url)
             } else {
                 persistSelectedFolder(nil)
@@ -86,6 +92,7 @@ final class RepoStore: ObservableObject {
         guard let folder else {
             UserDefaults.standard.removeObject(forKey: selectedFolderKey)
             UserDefaults.standard.removeObject(forKey: selectedFolderBookmarkKey)
+            UserDefaults.standard.removeObject(forKey: cachedRepositoriesKey)
             return
         }
 
@@ -107,5 +114,27 @@ final class RepoStore: ObservableObject {
         guard let securityScopedFolder else { return }
         securityScopedFolder.stopAccessingSecurityScopedResource()
         self.securityScopedFolder = nil
+    }
+
+    private func persistCachedRepositories(_ repositories: [GitRepository], for folder: URL) {
+        let snapshot = RepoCacheSnapshot(
+            folderPath: folder.path,
+            repositories: repositories.map(CachedRepository.init(from:)),
+            cachedAt: Date()
+        )
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .iso8601
+        if let data = try? encoder.encode(snapshot) {
+            UserDefaults.standard.set(data, forKey: cachedRepositoriesKey)
+        }
+    }
+
+    private func cachedRepositories(for folder: URL) -> [GitRepository] {
+        guard let data = UserDefaults.standard.data(forKey: cachedRepositoriesKey) else { return [] }
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        guard let snapshot = try? decoder.decode(RepoCacheSnapshot.self, from: data) else { return [] }
+        guard snapshot.folderPath == folder.path else { return [] }
+        return snapshot.repositories.map(\.repository)
     }
 }
