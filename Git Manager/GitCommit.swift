@@ -11,6 +11,7 @@ struct GitCommit: Identifiable, Hashable {
     var relativeDateText: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
+        
         return formatter.localizedString(for: date, relativeTo: Date())
     }
 }

@@ -6,6 +6,7 @@ struct ContentView: View {
     
     @State private var isAppeared = false
     @State private var selectedRepoID: GitRepository.ID?
+    @State private var searchQuery = ""
 
     private var favoriteSet: Set<String> {
         Set(favoriteRepoPaths.split(separator: "\n").map(String.init))
@@ -20,10 +21,13 @@ struct ContentView: View {
             withAnimation(.easeOut(duration: 0.5)) {
                 isAppeared = true
             }
-            updateSelection(with: store.repositories)
+            updateSelection(with: displayedRepositories)
         }
-        .onChange(of: store.repositories) { _, newValue in
-            updateSelection(with: newValue)
+        .onChange(of: store.repositories) {
+            updateSelection(with: displayedRepositories)
+        }
+        .onChange(of: searchQuery) {
+            updateSelection(with: displayedRepositories)
         }
     }
 
@@ -83,7 +87,7 @@ struct ContentView: View {
             Spacer()
 
             if store.selectedFolder != nil {
-                Text("\(store.repositories.count) repos")
+                Text(repoCountLabel)
                     .caption(design: .rounded)
                     .secondary()
             }
@@ -103,7 +107,7 @@ struct ContentView: View {
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
                 List(selection: $selectedRepoID) {
-                    ForEach(sortedRepositories) { repo in
+                    ForEach(displayedRepositories) { repo in
                         RepoListRowView(
                             repository: repo,
                             isFavorite: favoriteSet.contains(repo.path),
@@ -114,6 +118,7 @@ struct ContentView: View {
                 }
                 .listStyle(.inset)
                 .scrollContentBackground(.hidden)
+                .searchable(text: $searchQuery, placement: .sidebar, prompt: "Search repositories")
             }
         }
         .padding(20)
@@ -147,6 +152,24 @@ struct ContentView: View {
             }
             return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
         }
+    }
+
+    private var displayedRepositories: [GitRepository] {
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else {
+            return sortedRepositories
+        }
+        return sortedRepositories.filter { repo in
+            repo.name.localizedCaseInsensitiveContains(query)
+            || repo.path.localizedCaseInsensitiveContains(query)
+        }
+    }
+
+    private var repoCountLabel: String {
+        if searchQuery.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return "\(store.repositories.count) repos"
+        }
+        return "\(displayedRepositories.count) of \(store.repositories.count) repos"
     }
 
     private var selectedRepository: GitRepository? {
