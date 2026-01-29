@@ -11,7 +11,7 @@ struct RepoDetailHeaderView: View {
                 Text(repository.name)
                     .title3(.semibold, design: .serif)
 
-                Text(repository.path)
+                Text(repository.displayPath)
                     .caption(design: .monospaced)
                     .secondary()
                     .lineLimit(1)

@@ -44,10 +44,7 @@ struct RepoDetailCommitsView: View {
         if repository.baseRef == nil {
             return "main or master not found"
         }
-        if let comparisonBranch = repository.comparisonBranch {
-            return "No new commits on \(comparisonBranch) compared with \(repository.baseRef ?? "base")"
-        }
-        return "No new commits compared with \(repository.baseRef ?? "base")"
+        return "No new commits compared with base"
     }
 
     private var commitGroups: [CommitDayGroup] {

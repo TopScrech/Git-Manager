@@ -7,7 +7,7 @@ struct EmptyStateView: View {
         VStack(spacing: 12) {
             Image(systemName: hasFolder ? "tray" : "folder")
                 .title(.semibold)
-                .foregroundStyle(.secondary)
+                .secondary()
 
             Text(hasFolder ? "No repositories found" : "Choose a folder to start")
                 .headline(design: .serif)
@@ -15,7 +15,7 @@ struct EmptyStateView: View {
 
             Text(hasFolder ? "Try a broader folder or add repos" : "We will scan that folder and stop at repo roots")
                 .caption(design: .rounded)
-                .foregroundStyle(.secondary)
+                .secondary()
         }
         .padding(20)
         .background(.thinMaterial, in: .rect(cornerRadius: 18, style: .continuous))

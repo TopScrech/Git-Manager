@@ -6,7 +6,7 @@ struct RepoDetailStatusView: View {
     var body: some View {
         HStack(spacing: 10) {
             if let comparisonBranch = repository.comparisonBranch {
-                Label("Latest \(comparisonBranch)", systemImage: "clock")
+                Label("Latest", systemImage: "clock")
                     .labelStyle(.titleAndIcon)
                 if let branch = repository.currentBranch, branch != comparisonBranch {
                     Label("Checked out \(branch)", systemImage: "point.topleft.down.curvedto.point.bottomright.up")
@@ -20,10 +20,7 @@ struct RepoDetailStatusView: View {
                     .labelStyle(.titleAndIcon)
             }
 
-            if let base = repository.baseRef {
-                Label("Base \(base)", systemImage: "arrow.turn.up.left")
-                    .labelStyle(.titleAndIcon)
-            } else {
+            if repository.baseRef == nil {
                 Label("No main or master", systemImage: "exclamationmark.triangle")
                     .labelStyle(.titleAndIcon)
             }
@@ -35,7 +32,7 @@ struct RepoDetailStatusView: View {
             } else {
                 Label("Up to date", systemImage: "checkmark.circle")
                     .labelStyle(.titleAndIcon)
-                    .foregroundStyle(.secondary)
+                    .secondary()
             }
         }
         .caption(design: .rounded)

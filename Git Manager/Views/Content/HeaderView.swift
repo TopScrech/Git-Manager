@@ -5,9 +5,9 @@ struct HeaderView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text(selectedPath ?? "Pick a root folder to scan for repositories")
+            Text("Pick a root folder to scan for repositories")
                 .callout(design: .rounded)
-                .foregroundStyle(.secondary)
+                .secondary()
                 .lineLimit(2)
         }
     }

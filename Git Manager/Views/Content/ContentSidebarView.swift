@@ -8,18 +8,12 @@ struct ContentSidebarView: View {
     let displayedRepositories: [GitRepository]
     let repoCountLabel: String
     let onToggleFavorite: (String) -> Void
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HeaderView(
-                selectedPath: store.selectedFolder?.path
-            )
-
-            ContentControlRowView(
-                store: store,
-                repoCountLabel: repoCountLabel
-            )
-
+            HeaderView(selectedPath: store.selectedFolder?.path)
+            ContentControlRowView(store: store, repoCountLabel: repoCountLabel)
+            
             if store.repositories.isEmpty {
                 EmptyStateView(hasFolder: store.selectedFolder != nil)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)

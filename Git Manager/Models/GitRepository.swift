@@ -12,4 +12,5 @@ struct GitRepository: Identifiable, Hashable {
     let errorMessage: String?
 
     var aheadCount: Int { commits.count }
+    var displayPath: String { PathDisplay.compact(path) }
 }
