@@ -36,6 +36,27 @@ final class RepoStore: ObservableObject {
         scan(folder)
     }
 
+    func refreshRepository(id: GitRepository.ID) {
+        guard let folder = selectedFolder else { return }
+        let url = URL(fileURLWithPath: id)
+
+        Task {
+            let updatedRepository = await Task.detached(priority: .userInitiated) {
+                await GitRepositoryLoader.load(at: url)
+            }.value
+            guard let updatedRepository else { return }
+            guard selectedFolder == folder else { return }
+
+            if let index = repositories.firstIndex(where: { $0.id == updatedRepository.id }) {
+                repositories[index] = updatedRepository
+            } else {
+                repositories.append(updatedRepository)
+            }
+
+            persistCachedRepositories(repositories, for: folder)
+        }
+    }
+
     func selectFolder(_ folder: URL?) {
         stopAccessingSecurityScopedFolder()
 

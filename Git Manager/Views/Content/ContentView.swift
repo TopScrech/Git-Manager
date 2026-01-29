@@ -3,6 +3,7 @@ import ScrechKit
 struct ContentView: View {
     @StateObject private var store = RepoStore()
     @AppStorage("favoriteRepoPaths") private var favoriteRepoPaths = ""
+    @AppStorage("lastSelectedRepoPath") private var lastSelectedRepoPath = ""
 
     @State private var isAppeared = false
     @State private var selectedRepoID: GitRepository.ID?
@@ -38,6 +39,11 @@ struct ContentView: View {
         }
         .onChange(of: searchQuery) {
             updateSelection(with: displayedRepositories)
+        }
+        .onChange(of: selectedRepoID) { _, newValue in
+            guard let newValue else { return }
+            lastSelectedRepoPath = newValue
+            store.refreshRepository(id: newValue)
         }
     }
 
@@ -91,6 +97,11 @@ struct ContentView: View {
             return
         }
         if let selectedRepoID, repositories.contains(where: { $0.id == selectedRepoID }) {
+            return
+        }
+        if !lastSelectedRepoPath.isEmpty,
+           let savedRepository = repositories.first(where: { $0.id == lastSelectedRepoPath }) {
+            selectedRepoID = savedRepository.id
             return
         }
         selectedRepoID = repositories.first?.id

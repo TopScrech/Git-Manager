@@ -12,7 +12,6 @@ struct ContentSidebarView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HeaderView(selectedPath: store.selectedFolder?.path)
             ContentControlRowView(store: store, repoCountLabel: repoCountLabel)
             
             if store.repositories.isEmpty {
@@ -32,6 +31,7 @@ struct ContentSidebarView: View {
                 }
                 .listStyle(.plain)
                 .padding(.horizontal, -sidebarPadding)
+                .padding(.bottom, -sidebarPadding)
                 .scrollContentBackground(.hidden)
                 .searchable(text: $searchQuery, placement: .sidebar, prompt: "Search repositories")
             }
