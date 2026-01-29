@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F3AF1F182F2AD84C00C90958 /* ScrechKit in Frameworks */ = {isa = PBXBuildFile; productRef = F3AF1F172F2AD84C00C90958 /* ScrechKit */; };
+		F3D752C02F2C0FD500C4DF11 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = F3D752BF2F2C0FD500C4DF11 /* Algorithms */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3D752C02F2C0FD500C4DF11 /* Algorithms in Frameworks */,
 				F3AF1F182F2AD84C00C90958 /* ScrechKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -71,6 +73,7 @@
 			name = "Git Manager";
 			packageProductDependencies = (
 				F3AF1F172F2AD84C00C90958 /* ScrechKit */,
+				F3D752BF2F2C0FD500C4DF11 /* Algorithms */,
 			);
 			productName = "Git Manager";
 			productReference = F3EBA0022F29FF7100AF831A /* Git Manager.app */;
@@ -102,6 +105,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F3AF1F162F2AD84C00C90958 /* XCRemoteSwiftPackageReference "ScrechKit" */,
+				F3D752BE2F2C0FD500C4DF11 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F3EBA0032F29FF7100AF831A /* Products */;
@@ -354,6 +358,14 @@
 				kind = branch;
 			};
 		};
+		F3D752BE2F2C0FD500C4DF11 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -361,6 +373,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F3AF1F162F2AD84C00C90958 /* XCRemoteSwiftPackageReference "ScrechKit" */;
 			productName = ScrechKit;
+		};
+		F3D752BF2F2C0FD500C4DF11 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F3D752BE2F2C0FD500C4DF11 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

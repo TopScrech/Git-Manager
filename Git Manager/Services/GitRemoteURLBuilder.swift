@@ -41,6 +41,23 @@ struct GitRemoteURLBuilder {
         }
     }
 
+    static func issueURL(remote: String, issueNumber: String) -> URL? {
+        guard let info = normalize(remote) else { return nil }
+        let digits = issueNumber.filter(\.isNumber)
+        guard !digits.isEmpty else { return nil }
+
+        switch info.provider {
+        case .github:
+            return URL(string: "\(info.webBase)/issues/\(digits)")
+        case .gitlab:
+            return URL(string: "\(info.webBase)/-/issues/\(digits)")
+        case .bitbucket:
+            return URL(string: "\(info.webBase)/issues/\(digits)")
+        case .other:
+            return nil
+        }
+    }
+
     private static func normalize(_ remote: String) -> RemoteInfo? {
         let trimmed = remote.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }

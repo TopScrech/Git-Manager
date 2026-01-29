@@ -19,7 +19,7 @@ struct RepoDetailEmptyView: View {
                 .foregroundStyle(.secondary)
         }
         .padding(22)
-        .background(.thinMaterial, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .background(.thinMaterial, in: .rect(cornerRadius: 18, style: .continuous))
         .overlay(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .stroke(.white.opacity(0.25), lineWidth: 0.8)

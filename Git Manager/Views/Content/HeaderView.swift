@@ -5,10 +5,6 @@ struct HeaderView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Text("Git Manager")
-                .title2(.semibold, design: .serif)
-                .foregroundStyle(.primary)
-
             Text(selectedPath ?? "Pick a root folder to scan for repositories")
                 .callout(design: .rounded)
                 .foregroundStyle(.secondary)
