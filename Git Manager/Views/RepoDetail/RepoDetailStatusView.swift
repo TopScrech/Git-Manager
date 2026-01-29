@@ -6,7 +6,7 @@ struct RepoDetailStatusView: View {
     var body: some View {
         HStack(spacing: 10) {
             if let comparisonBranch = repository.comparisonBranch {
-                Label("Latest", systemImage: "clock")
+                Label(comparisonBranch, systemImage: "arrow.down.circle")
                     .labelStyle(.titleAndIcon)
                 if let branch = repository.currentBranch, branch != comparisonBranch {
                     Label("Checked out \(branch)", systemImage: "point.topleft.down.curvedto.point.bottomright.up")
