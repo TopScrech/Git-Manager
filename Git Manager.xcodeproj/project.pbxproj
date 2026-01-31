@@ -12,6 +12,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		F37131282F2DFF0300DFA924 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
 		F3EBA0022F29FF7100AF831A /* Git Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Git Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -39,6 +40,7 @@
 		F3EB9FF92F29FF7100AF831A = {
 			isa = PBXGroup;
 			children = (
+				F37131282F2DFF0300DFA924 /* AGENTS.md */,
 				F3EBA0042F29FF7100AF831A /* Git Manager */,
 				F3EBA0032F29FF7100AF831A /* Products */,
 			);
