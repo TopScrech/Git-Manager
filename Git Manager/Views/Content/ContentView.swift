@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var isAppeared = false
     @State private var selectedRepoID: GitRepository.ID?
     @State private var searchQuery = ""
+    @FocusState private var isSearchFocused: Bool
 
     private var favoriteSet: Set<String> {
         Set(favoriteRepoPaths.split(separator: "\n").map(String.init))
@@ -22,12 +23,14 @@ struct ContentView: View {
                 favoriteSet: favoriteSet,
                 selectedRepoID: $selectedRepoID,
                 searchQuery: $searchQuery,
+                isSearchFocused: $isSearchFocused,
                 displayedRepositories: displayedRepositories,
                 selectedRepository: selectedRepository,
                 repoCountLabel: repoCountLabel,
                 onToggleFavorite: toggleFavorite
             )
         }
+        .focusedSceneValue(\.searchFocus, $isSearchFocused)
         .onAppear {
             withAnimation(.easeOut(duration: 0.5)) {
                 isAppeared = true

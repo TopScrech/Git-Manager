@@ -5,6 +5,7 @@ struct ContentSidebarView: View {
     let favoriteSet: Set<String>
     @Binding var selectedRepoID: GitRepository.ID?
     @Binding var searchQuery: String
+    let isSearchFocused: FocusState<Bool>.Binding
     let displayedRepositories: [GitRepository]
     let repoCountLabel: String
     let onToggleFavorite: (String) -> Void
@@ -34,6 +35,7 @@ struct ContentSidebarView: View {
                 .padding(.bottom, -sidebarPadding)
                 .scrollContentBackground(.hidden)
                 .searchable(text: $searchQuery, placement: .sidebar, prompt: "Search repositories")
+                .searchFocus(isSearchFocused)
             }
         }
         .padding(sidebarPadding)

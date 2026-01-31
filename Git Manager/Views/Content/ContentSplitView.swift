@@ -6,6 +6,7 @@ struct ContentSplitView: View {
     let favoriteSet: Set<String>
     @Binding var selectedRepoID: GitRepository.ID?
     @Binding var searchQuery: String
+    let isSearchFocused: FocusState<Bool>.Binding
     let displayedRepositories: [GitRepository]
     let selectedRepository: GitRepository?
     let repoCountLabel: String
@@ -18,6 +19,7 @@ struct ContentSplitView: View {
                 favoriteSet: favoriteSet,
                 selectedRepoID: $selectedRepoID,
                 searchQuery: $searchQuery,
+                isSearchFocused: isSearchFocused,
                 displayedRepositories: displayedRepositories,
                 repoCountLabel: repoCountLabel,
                 onToggleFavorite: onToggleFavorite
