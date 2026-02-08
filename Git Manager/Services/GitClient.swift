@@ -117,6 +117,22 @@ struct GitClient {
             }
     }
 
+    static func codeLineHistory(at path: String) async throws -> [GitCodeLinePoint] {
+        let recordSeparator = "\u{001e}"
+        let fieldSeparator = "\u{001f}"
+        let format = "\(recordSeparator)%H\(fieldSeparator)%h\(fieldSeparator)%ct\(fieldSeparator)%s"
+        let output = try await run(["log", "--reverse", "--numstat", "--pretty=format:\(format)"], at: path)
+        if output.isEmpty { return [] }
+
+        return await Task.detached(priority: .userInitiated) {
+            parseCodeLineHistory(
+                output,
+                recordSeparator: Character(recordSeparator),
+                fieldSeparator: Character(fieldSeparator)
+            )
+        }.value
+    }
+
     private static func runGit(_ args: [String], at path: String) async throws -> String {
         try await Task.detached {
             let process = Process()
@@ -206,4 +222,98 @@ struct GitClient {
 
         return nil
     }
+
+    nonisolated private static func parseCodeLineHistory(
+        _ output: String,
+        recordSeparator: Character,
+        fieldSeparator: Character
+    ) -> [GitCodeLinePoint] {
+        var totalLines = 0
+        var points: [GitCodeLinePoint] = []
+
+        let commits = output.split(separator: recordSeparator, omittingEmptySubsequences: true)
+        for commit in commits {
+            let lines = commit.split(separator: "\n", omittingEmptySubsequences: false)
+            guard let headerLine = lines.first else { continue }
+
+            let header = headerLine.split(separator: fieldSeparator, omittingEmptySubsequences: false)
+            guard header.count == 4 else { continue }
+
+            let fullHash = String(header[0])
+            let shortHash = String(header[1])
+            let timestamp = TimeInterval(header[2]) ?? 0
+            let subject = String(header[3])
+
+            var delta = 0
+            for line in lines.dropFirst() {
+                let columns = line.split(separator: "\t", omittingEmptySubsequences: false)
+                guard columns.count >= 3 else { continue }
+                guard let added = Int(columns[0]), let deleted = Int(columns[1]) else { continue }
+
+                let path = String(columns[2])
+                guard isCodePath(path) else { continue }
+                delta += added - deleted
+            }
+
+            totalLines += delta
+            points.append(
+                GitCodeLinePoint(
+                    fullHash: fullHash,
+                    shortHash: shortHash,
+                    subject: subject,
+                    date: Date(timeIntervalSince1970: timestamp),
+                    delta: delta,
+                    totalLines: max(totalLines, 0)
+                )
+            )
+        }
+
+        return points
+    }
+
+    nonisolated private static func isCodePath(_ rawPath: String) -> Bool {
+        let normalizedPath = normalizeNumstatPath(rawPath)
+        let fileURL = URL(fileURLWithPath: normalizedPath)
+        let extensionName = fileURL.pathExtension.lowercased()
+        if !extensionName.isEmpty {
+            return codeExtensions.contains(extensionName)
+        }
+        return codeFileNames.contains(fileURL.lastPathComponent.lowercased())
+    }
+
+    nonisolated private static func normalizeNumstatPath(_ path: String) -> String {
+        let trimmedPath = path.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard trimmedPath.contains("=>") else { return trimmedPath }
+
+        if let openBraceIndex = trimmedPath.firstIndex(of: "{"),
+           let closeBraceIndex = trimmedPath[openBraceIndex...].firstIndex(of: "}") {
+            let beforeBrace = trimmedPath[..<openBraceIndex]
+            let afterBrace = trimmedPath[trimmedPath.index(after: closeBraceIndex)...]
+            let insideBraces = trimmedPath[trimmedPath.index(after: openBraceIndex)..<closeBraceIndex]
+            if let separatorRange = insideBraces.range(of: " => ") {
+                let renamedPart = insideBraces[separatorRange.upperBound...]
+                return String(beforeBrace + renamedPart + afterBrace)
+            }
+        }
+
+        if let separatorRange = trimmedPath.range(of: " => ", options: .backwards) {
+            return String(trimmedPath[separatorRange.upperBound...])
+        }
+
+        return trimmedPath
+    }
+
+    nonisolated private static let codeExtensions: Set<String> = [
+        "ada", "applescript", "asm", "astro", "awk", "bash", "c", "cc", "clj", "cljs", "cmake",
+        "cpp", "cs", "css", "cu", "cuh", "cxx", "dart", "dockerfile", "el", "elm", "erb", "ex",
+        "exs", "f", "f90", "fs", "fsi", "fsx", "go", "gradle", "graphql", "groovy", "h", "hh",
+        "hpp", "hrl", "hs", "htm", "html", "java", "jl", "js", "jsx", "kt", "kts", "less", "lhs",
+        "lua", "m", "make", "mdx", "mm", "nim", "php", "pl", "pm", "ps1", "py", "r", "rb", "rs",
+        "sass", "scala", "scss", "sh", "sol", "sql", "svelte", "swift", "tcl", "tex", "toml", "ts",
+        "tsx", "vb", "v", "vim", "vue", "xml", "xsl", "yaml", "yml", "zig", "zsh"
+    ]
+
+    nonisolated private static let codeFileNames: Set<String> = [
+        "buildfile", "dockerfile", "gemfile", "justfile", "makefile", "podfile", "rakefile", "vagrantfile"
+    ]
 }

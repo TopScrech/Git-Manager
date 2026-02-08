@@ -14,6 +14,7 @@ struct RepoDetailView: View {
                     onToggleFavorite: onToggleFavorite
                 )
                 RepoDetailStatusView(repository: repository)
+                RepoDetailCodeLinesView(repository: repository)
                 RepoDetailCommitsView(repository: repository)
             }
             .padding(20)
