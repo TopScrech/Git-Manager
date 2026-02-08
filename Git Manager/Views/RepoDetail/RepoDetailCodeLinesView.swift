@@ -52,13 +52,6 @@ struct RepoDetailCodeLinesView: View {
 
     private var chart: some View {
         Chart(lineHistory) { point in
-            AreaMark(
-                x: .value("Date", point.date),
-                y: .value("Total", point.totalLines)
-            )
-            .interpolationMethod(.linear)
-            .foregroundStyle(AppTheme.accentSoft.gradient)
-
             LineMark(
                 x: .value("Date", point.date),
                 y: .value("Total", point.totalLines)
