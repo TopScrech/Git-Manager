@@ -14,6 +14,7 @@
 /* Begin PBXFileReference section */
 		F37131282F2DFF0300DFA924 /* AGENTS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = AGENTS.md; sourceTree = "<group>"; };
 		F3715F512F2E02B100DFA924 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		F3E066952F467FB0001B77CD /* UNLICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = UNLICENSE.txt; sourceTree = "<group>"; };
 		F3EBA0022F29FF7100AF831A /* Git Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Git Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -43,6 +44,7 @@
 			children = (
 				F37131282F2DFF0300DFA924 /* AGENTS.md */,
 				F3715F512F2E02B100DFA924 /* README.md */,
+				F3E066952F467FB0001B77CD /* UNLICENSE.txt */,
 				F3EBA0042F29FF7100AF831A /* Git Manager */,
 				F3EBA0032F29FF7100AF831A /* Products */,
 			);
