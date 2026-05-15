@@ -42,8 +42,8 @@
 			children = (
 				F37131282F2DFF0300DFA924 /* AGENTS.md */,
 				F3715F512F2E02B100DFA924 /* README.md */,
-				F3C1C3FD2F48FCD600D3D257 /* LICENSE.txt */,
 				F3EBA0042F29FF7100AF831A /* Git Manager */,
+				F3C1C3FD2F48FCD600D3D257 /* LICENSE.txt */,
 				F3EBA0032F29FF7100AF831A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -358,13 +358,13 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/TopScrech/ScrechKit";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
 			};
 		};
 		F3D752BE2F2C0FD500C4DF11 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			repositoryURL = "https://github.com/apple/swift-algorithms";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.2.1;
