@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 struct GitRepository: Identifiable, Hashable {
     let id: String
@@ -10,7 +10,7 @@ struct GitRepository: Identifiable, Hashable {
     let baseRef: String?
     let commits: [GitCommit]
     let errorMessage: String?
-
+    
     var aheadCount: Int { commits.count }
     var displayPath: String { PathDisplay.compact(path) }
 }

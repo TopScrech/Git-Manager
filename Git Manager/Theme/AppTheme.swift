@@ -5,7 +5,7 @@ struct AppTheme {
     static let accentSoft = Color(red: 0.86, green: 0.95, blue: 0.92)
     static let warning = Color(red: 0.78, green: 0.36, blue: 0.18)
     static let star = Color(red: 0.95, green: 0.73, blue: 0.24)
-
+    
     static func backgroundGradient(for scheme: ColorScheme) -> LinearGradient {
         let colors: [Color]
         if scheme == .dark {

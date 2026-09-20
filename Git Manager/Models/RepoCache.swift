@@ -16,7 +16,7 @@ struct CachedRepository: Codable {
     let baseRef: String?
     let commits: [CachedCommit]
     let errorMessage: String?
-
+    
     init(from repository: GitRepository) {
         id = repository.id
         name = repository.name
@@ -28,7 +28,7 @@ struct CachedRepository: Codable {
         commits = repository.commits.map(CachedCommit.init(from:))
         errorMessage = repository.errorMessage
     }
-
+    
     var repository: GitRepository {
         GitRepository(
             id: id,
@@ -49,14 +49,14 @@ struct CachedCommit: Codable {
     let shortHash: String
     let subject: String
     let date: Date
-
+    
     init(from commit: GitCommit) {
         fullHash = commit.fullHash
         shortHash = commit.shortHash
         subject = commit.subject
         date = commit.date
     }
-
+    
     var commit: GitCommit {
         GitCommit(
             fullHash: fullHash,

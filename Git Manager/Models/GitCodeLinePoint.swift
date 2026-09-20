@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 struct GitCodeLinePoint: Identifiable, Hashable {
     let fullHash: String
@@ -7,6 +7,6 @@ struct GitCodeLinePoint: Identifiable, Hashable {
     let date: Date
     let delta: Int
     let totalLines: Int
-
+    
     var id: String { fullHash }
 }

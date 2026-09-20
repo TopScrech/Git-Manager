@@ -4,17 +4,17 @@ struct GitRemoteURLBuilder {
     enum Provider {
         case github, gitlab, bitbucket, other
     }
-
+    
     struct RemoteInfo {
         let host: String
         let repoPath: String
         let webBase: String
         let provider: Provider
     }
-
+    
     static func pullRequestURL(remote: String, base: String, head: String) -> URL? {
         guard let info = normalize(remote) else { return nil }
-
+        
         switch info.provider {
         case .github:
             let baseEncoded = encodePathComponent(base)
@@ -40,12 +40,12 @@ struct GitRemoteURLBuilder {
             return nil
         }
     }
-
+    
     static func issueURL(remote: String, issueNumber: String) -> URL? {
         guard let info = normalize(remote) else { return nil }
         let digits = issueNumber.filter(\.isNumber)
         guard !digits.isEmpty else { return nil }
-
+        
         switch info.provider {
         case .github:
             return URL(string: "\(info.webBase)/issues/\(digits)")
@@ -57,14 +57,14 @@ struct GitRemoteURLBuilder {
             return nil
         }
     }
-
+    
     private static func normalize(_ remote: String) -> RemoteInfo? {
         let trimmed = remote.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return nil }
-
+        
         let host: String
         var path: String
-
+        
         if let url = URL(string: trimmed), let urlHost = url.host {
             host = urlHost
             path = url.path
@@ -74,14 +74,14 @@ struct GitRemoteURLBuilder {
         } else {
             return nil
         }
-
+        
         path = path.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
         if path.hasSuffix(".git") {
             path.removeLast(4)
         }
-
+        
         guard !path.isEmpty else { return nil }
-
+        
         let webBase = "https://\(host)/\(path)"
         return RemoteInfo(
             host: host,
@@ -90,7 +90,7 @@ struct GitRemoteURLBuilder {
             provider: provider(for: host)
         )
     }
-
+    
     private static func provider(for host: String) -> Provider {
         let lowercased = host.lowercased()
         if lowercased.contains("github") { return .github }
@@ -98,7 +98,7 @@ struct GitRemoteURLBuilder {
         if lowercased.contains("bitbucket") { return .bitbucket }
         return .other
     }
-
+    
     private static func parseScp(_ remote: String) -> (host: String, path: String)? {
         guard let atIndex = remote.firstIndex(of: "@") else { return nil }
         let afterAt = remote[remote.index(after: atIndex)...]
@@ -108,7 +108,7 @@ struct GitRemoteURLBuilder {
         guard !host.isEmpty, !path.isEmpty else { return nil }
         return (host: host, path: "/" + path)
     }
-
+    
     private static func encodePathComponent(_ value: String) -> String {
         let allowed = CharacterSet.urlPathAllowed.subtracting(CharacterSet(charactersIn: "/"))
         return value.addingPercentEncoding(withAllowedCharacters: allowed) ?? value

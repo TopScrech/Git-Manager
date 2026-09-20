@@ -1,17 +1,17 @@
-import SwiftUI
+import Foundation
 
 struct GitCommit: Identifiable, Hashable {
     let fullHash: String
     let shortHash: String
     let subject: String
     let date: Date
-
+    
     var id: String { fullHash }
     var issueNumbers: [String] {
         subject.matches(of: Self.issueRegex).map { String($0.output) }
     }
     var hasIssueNumbers: Bool { !issueNumbers.isEmpty }
-
+    
     var displayTimeText: String {
         let calendar = Calendar.current
         if calendar.isDateInToday(date) {
@@ -19,19 +19,19 @@ struct GitCommit: Identifiable, Hashable {
         }
         return Self.timeFormatter.string(from: date)
     }
-
+    
     private static let relativeFormatter: RelativeDateTimeFormatter = {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .abbreviated
         return formatter
     }()
-
+    
     private static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .none
         formatter.timeStyle = .short
         return formatter
     }()
-
+    
     private static let issueRegex = /#\d+/
 }

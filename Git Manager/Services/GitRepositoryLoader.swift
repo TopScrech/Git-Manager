@@ -4,7 +4,7 @@ struct GitRepositoryLoader {
     static func load(at url: URL) async -> GitRepository? {
         let path = url.path
         let name = url.lastPathComponent
-
+        
         do {
             let branch = try await GitClient.currentBranch(at: path)
             let baseRef = try await GitClient.baseRef(at: path)
@@ -25,7 +25,7 @@ struct GitRepositoryLoader {
             } else {
                 commits = []
             }
-
+            
             return GitRepository(
                 id: path,
                 name: name,

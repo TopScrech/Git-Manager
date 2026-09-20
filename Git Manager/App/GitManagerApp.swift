@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct GitManagerApp: App {
     @FocusedValue(\.searchFocus) private var searchFocus
-
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
