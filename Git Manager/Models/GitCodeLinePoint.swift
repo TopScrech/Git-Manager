@@ -1,6 +1,6 @@
 import Foundation
 
-struct GitCodeLinePoint: Identifiable, Hashable {
+struct GitCodeLinePoint: Identifiable, Hashable, Codable {
     let fullHash: String
     let shortHash: String
     let subject: String

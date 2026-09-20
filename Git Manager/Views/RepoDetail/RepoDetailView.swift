@@ -15,6 +15,7 @@ struct RepoDetailView: View {
                 )
                 RepoDetailStatusView(repository: repository)
                 RepoDetailCodeLinesView(repository: repository)
+                    .id(repository.path)
                 RepoDetailCommitsView(repository: repository)
             }
             .padding(20)

@@ -117,11 +117,11 @@ struct GitClient {
             }
     }
     
-    static func codeLineHistory(at path: String) async throws -> [GitCodeLinePoint] {
+    static func codeLineHistory(at path: String, revision: String = "HEAD") async throws -> [GitCodeLinePoint] {
         let recordSeparator = "\u{001e}"
         let fieldSeparator = "\u{001f}"
         let format = "\(recordSeparator)%H\(fieldSeparator)%h\(fieldSeparator)%ct\(fieldSeparator)%s"
-        let output = try await run(["log", "--reverse", "--numstat", "--pretty=format:\(format)"], at: path)
+        let output = try await run(["log", "--reverse", "--numstat", "--pretty=format:\(format)", revision, "--"], at: path)
         if output.isEmpty { return [] }
         
         return await Task.detached(priority: .userInitiated) {
