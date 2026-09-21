@@ -16,6 +16,7 @@ enum CodeLineGraphMode: CaseIterable, Identifiable {
         switch self {
         case .allTime:
             history
+            
         case .pastYear:
             if let startDate = calendar.date(byAdding: .year, value: -1, to: date) {
                 history.filter { $0.date >= startDate && $0.date <= date }
