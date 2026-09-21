@@ -9,8 +9,9 @@ struct ContentSidebarView: View {
     let displayedRepositories: [GitRepository]
     let repoCountLabel: String
     let onToggleFavorite: (String) -> Void
-    private let sidebarPadding: CGFloat = 20
-
+    
+    private let sidebarPadding = 20.0
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             ContentControlRowView(store: store, repoCountLabel: repoCountLabel)
@@ -21,7 +22,7 @@ struct ContentSidebarView: View {
             } else {
                 List(selection: $selectedRepoID) {
                     ForEach(displayedRepositories) { repo in
-                        RepoListRowView(
+                        RepoListCard(
                             repository: repo,
                             isFavorite: favoriteSet.contains(repo.path),
                             onToggleFavorite: { onToggleFavorite(repo.path) }

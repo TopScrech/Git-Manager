@@ -11,7 +11,7 @@ struct ContentSplitView: View {
     let selectedRepository: GitRepository?
     let repoCountLabel: String
     let onToggleFavorite: (String) -> Void
-
+    
     var body: some View {
         NavigationSplitView {
             ContentSidebarView(

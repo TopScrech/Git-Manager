@@ -1,4 +1,4 @@
-import ScrechKit
+import SwiftUI
 
 struct ContentDetailView: View {
     let repository: GitRepository?
@@ -6,7 +6,7 @@ struct ContentDetailView: View {
     let hasRepositories: Bool
     let hasFolder: Bool
     let onToggleFavorite: (String) -> Void
-
+    
     var body: some View {
         Group {
             if let repository {

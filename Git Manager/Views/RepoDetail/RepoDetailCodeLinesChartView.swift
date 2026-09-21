@@ -3,10 +3,10 @@ import ScrechKit
 
 struct RepoDetailCodeLinesChartView: View {
     @Environment(CodeLineHistoryModel.self) private var model
-
+    
     var body: some View {
         let history = model.displayedHistory
-
+        
         Chart(history) { point in
             LineMark(
                 x: .value("Date", point.date),
@@ -15,7 +15,7 @@ struct RepoDetailCodeLinesChartView: View {
             .interpolationMethod(.linear)
             .lineStyle(StrokeStyle(lineWidth: 2))
             .foregroundStyle(AppTheme.accent)
-
+            
             if history.count == 1 {
                 PointMark(
                     x: .value("Date", point.date),

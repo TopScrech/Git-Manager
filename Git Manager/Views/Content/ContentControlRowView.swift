@@ -3,7 +3,7 @@ import ScrechKit
 struct ContentControlRowView: View {
     @ObservedObject var store: RepoStore
     let repoCountLabel: String
-
+    
     var body: some View {
         HStack(spacing: 10) {
             Button {
@@ -25,7 +25,7 @@ struct ContentControlRowView: View {
                 .foregroundStyle(.white)
             }
             .buttonStyle(.plain)
-
+            
             if store.isScanning {
                 ProgressView()
                     .controlSize(.small)
@@ -45,9 +45,9 @@ struct ContentControlRowView: View {
                 .buttonStyle(.plain)
                 .disabled(store.selectedFolder == nil)
             }
-
+            
             Spacer()
-
+            
             if store.selectedFolder != nil {
                 Text(repoCountLabel)
                     .caption(design: .rounded)

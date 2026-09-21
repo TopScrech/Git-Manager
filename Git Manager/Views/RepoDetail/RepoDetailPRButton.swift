@@ -1,9 +1,9 @@
 import ScrechKit
 
-struct RepoDetailPRButtonView: View {
+struct RepoDetailPRButton: View {
     let repository: GitRepository
     @Environment(\.openURL) private var openURL
-
+    
     var body: some View {
         Button {
             guard let prURL else { return }
@@ -19,7 +19,7 @@ struct RepoDetailPRButtonView: View {
         .disabled(prURL == nil)
         .help(prButtonHelp)
     }
-
+    
     private var prURL: URL? {
         guard let baseRef = repository.baseRef else { return nil }
         guard let compareBranch = repository.comparisonBranch ?? repository.currentBranch else { return nil }
@@ -31,7 +31,7 @@ struct RepoDetailPRButtonView: View {
             head: compareBranch
         )
     }
-
+    
     private var prButtonHelp: String {
         if repository.baseRef == nil {
             return "main or master not found"

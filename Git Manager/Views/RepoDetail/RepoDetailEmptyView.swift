@@ -29,22 +29,25 @@ struct RepoDetailEmptyView: View {
     
     private var iconName: String {
         if hasRepositories {
-            return "rectangle.on.rectangle"
+            "rectangle.on.rectangle"
+        } else {
+            hasFolder ? "tray" : "folder"
         }
-        return hasFolder ? "tray" : "folder"
     }
     
     private var title: String {
         if hasRepositories {
-            return "Select a repository"
+            "Select a repository"
+        } else {
+            hasFolder ? "No repositories found" : "Choose a folder"
         }
-        return hasFolder ? "No repositories found" : "Choose a folder"
     }
     
     private var subtitle: String {
         if hasRepositories {
-            return "Pick a repo in the sidebar to see commits"
+            "Pick a repo in the sidebar to see commits"
+        } else {
+            hasFolder ? "Try a broader folder or add repos" : "We will scan that folder and stop at repo roots"
         }
-        return hasFolder ? "Try a broader folder or add repos" : "We will scan that folder and stop at repo roots"
     }
 }

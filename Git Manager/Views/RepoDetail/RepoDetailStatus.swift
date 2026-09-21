@@ -1,8 +1,8 @@
 import ScrechKit
 
-struct RepoDetailStatusView: View {
+struct RepoDetailStatus: View {
     let repository: GitRepository
-
+    
     var body: some View {
         HStack(spacing: 10) {
             if let comparisonBranch = repository.comparisonBranch {
@@ -19,12 +19,12 @@ struct RepoDetailStatusView: View {
                 Label("No branch", systemImage: "questionmark.circle")
                     .labelStyle(.titleAndIcon)
             }
-
+            
             if repository.baseRef == nil {
                 Label("No main or master", systemImage: "exclamationmark.triangle")
                     .labelStyle(.titleAndIcon)
             }
-
+            
             if repository.aheadCount > 0 {
                 Label("\(repository.aheadCount) new", systemImage: "sparkles")
                     .labelStyle(.titleAndIcon)

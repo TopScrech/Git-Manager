@@ -1,6 +1,6 @@
 import ScrechKit
 
-struct RepoListRowView: View {
+struct RepoListCard: View {
     let repository: GitRepository
     let isFavorite: Bool
     let onToggleFavorite: () -> Void

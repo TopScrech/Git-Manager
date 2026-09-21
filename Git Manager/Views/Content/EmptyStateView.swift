@@ -2,17 +2,17 @@ import ScrechKit
 
 struct EmptyStateView: View {
     let hasFolder: Bool
-
+    
     var body: some View {
         VStack(spacing: 12) {
             Image(systemName: hasFolder ? "tray" : "folder")
                 .title(.semibold)
                 .secondary()
-
+            
             Text(hasFolder ? "No repositories found" : "Choose a folder to start")
                 .headline(design: .serif)
                 .foregroundStyle(.primary)
-
+            
             Text(hasFolder ? "Try a broader folder or add repos" : "We will scan that folder and stop at repo roots")
                 .caption(design: .rounded)
                 .secondary()

@@ -3,12 +3,12 @@ import ScrechKit
 
 struct RepoDetailCommitsView: View {
     let repository: GitRepository
-
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Text("Commits")
                 .headline(design: .rounded)
-
+            
             if let errorMessage = repository.errorMessage {
                 Text(errorMessage)
                     .caption(design: .rounded)
@@ -24,7 +24,7 @@ struct RepoDetailCommitsView: View {
                             Text(dayTitle(for: group.date))
                                 .caption(.semibold, design: .rounded)
                                 .secondary()
-
+                            
                             VStack(alignment: .leading, spacing: 8) {
                                 ForEach(group.commits) { commit in
                                     CommitRowView(
@@ -39,16 +39,18 @@ struct RepoDetailCommitsView: View {
             }
         }
     }
-
+    
     private var emptyMessage: String {
         if repository.baseRef == nil {
-            return "main or master not found"
+            "main or master not found"
+        } else {
+            "No new commits compared with base"
         }
-        return "No new commits compared with base"
     }
-
+    
     private var commitGroups: [CommitDayGroup] {
         let calendar = Calendar.current
+        
         return repository.commits
             .chunked { calendar.isDate($0.date, inSameDayAs: $1.date) }
             .map { group in
@@ -56,13 +58,15 @@ struct RepoDetailCommitsView: View {
                 return CommitDayGroup(date: date, commits: Array(group))
             }
     }
-
+    
     private func issueLinks(for commit: GitCommit) -> [CommitIssueLink] {
         let issueNumbers = commit.issueNumbers
         guard !issueNumbers.isEmpty else { return [] }
+        
         guard let remoteURL = repository.remoteURL else {
             return issueNumbers.map { CommitIssueLink(number: $0, url: nil) }
         }
+        
         return issueNumbers.map { issueNumber in
             CommitIssueLink(
                 number: issueNumber,
@@ -70,21 +74,21 @@ struct RepoDetailCommitsView: View {
             )
         }
     }
-
+    
     private func dayTitle(for date: Date) -> String {
         let calendar = Calendar.current
-
+        
         if calendar.isDateInToday(date) {
             return "Today"
         }
-
+        
         if calendar.isDateInYesterday(date) {
             return "Yesterday"
         }
-
+        
         return daysAgoText(for: date, calendar: calendar)
     }
-
+    
     private func daysAgoText(for date: Date, calendar: Calendar) -> String {
         let startOfDay = calendar.startOfDay(for: date)
         let today = calendar.startOfDay(for: Date())
@@ -98,6 +102,6 @@ struct RepoDetailCommitsView: View {
 private struct CommitDayGroup: Identifiable {
     let date: Date
     let commits: [GitCommit]
-
+    
     var id: Date { date }
 }

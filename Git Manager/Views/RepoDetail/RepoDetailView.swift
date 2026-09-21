@@ -4,7 +4,7 @@ struct RepoDetailView: View {
     let repository: GitRepository
     let isFavorite: Bool
     let onToggleFavorite: () -> Void
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 14) {
@@ -13,9 +13,12 @@ struct RepoDetailView: View {
                     isFavorite: isFavorite,
                     onToggleFavorite: onToggleFavorite
                 )
-                RepoDetailStatusView(repository: repository)
+                
+                RepoDetailStatus(repository: repository)
+                
                 RepoDetailCodeLinesView(repository: repository)
                     .id(repository.path)
+                
                 RepoDetailCommitsView(repository: repository)
             }
             .padding(20)
